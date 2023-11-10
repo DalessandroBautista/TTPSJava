@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class GenericDAOHibernateJPA<T> implements GenericDAO<T> {
 	
 	protected Class<T> clasePersistente;
-	private EntityManager em;
+	//private EntityManager em;
 	
 	public GenericDAOHibernateJPA(Class<T> clase) {
 		clasePersistente = clase;
@@ -18,6 +18,7 @@ public class GenericDAOHibernateJPA<T> implements GenericDAO<T> {
 	@Override
 	public T recuperar(Long id){
 		T entity = null;
+		EntityManager em = EMF.getEMF().createEntityManager();
 		try {
 			em.getTransaction().begin();
 			TypedQuery<T> query = em.createQuery("select e from " +  getPersistentClass().getSimpleName() + " where id = ?1", clasePersistente);
@@ -37,10 +38,13 @@ public class GenericDAOHibernateJPA<T> implements GenericDAO<T> {
 	
 	@Override
 	public void guardar(T entity) {
+		EntityManager em = EMF.getEMF().createEntityManager();
+		EntityTransaction tx = null;
 		try {
-			em.getTransaction().begin();
+			tx = em.getTransaction();
+			tx.begin();
 			em.persist(entity);
-			em.getTransaction().commit();
+			tx.commit();
 		}
 		catch (Exception e){
 			if (em.getTransaction().isActive()) {
@@ -61,16 +65,19 @@ public class GenericDAOHibernateJPA<T> implements GenericDAO<T> {
 	}
 	
 	public EntityManager getEntityManager() {
-		return this.em;
+		EntityManager em = EMF.getEMF().createEntityManager();
+		return em;
 	}
 	
-	public void setEntityManager(EntityManager em){
+	/*public void setEntityManager(EntityManager em){
+		EntityManager em = EMF.getEMF().createEntityManager();
 		this.em = em;
-	}
+	}*/
 	
 	@Override
 	public void actualizar(T entity) {
-		 EntityTransaction etx= em.getTransaction();
+		EntityManager em = EMF.getEMF().createEntityManager(); 
+		EntityTransaction etx= em.getTransaction();
 		 etx.begin();
 		 em.merge(entity);
 		 etx.commit();
@@ -79,6 +86,7 @@ public class GenericDAOHibernateJPA<T> implements GenericDAO<T> {
 	
 	@Override
 	public void borrar(T entity) {
+		EntityManager em = EMF.getEMF().createEntityManager();
 		EntityTransaction tx = null;
 	 try {
 		 tx = em.getTransaction();
@@ -95,6 +103,7 @@ public class GenericDAOHibernateJPA<T> implements GenericDAO<T> {
 	}
 	
 	public List<T> recuperarTodos(String columnOrder){
+		EntityManager em = EMF.getEMF().createEntityManager();
 		Query consulta= em.createQuery("select e from "+ getPersistentClass().getSimpleName()+" e order by e."+columnOrder);
 		List<T> resultado = (List<T>) consulta.getResultList();
 		return resultado;

@@ -1,5 +1,6 @@
 package ttps.clasesDeObjetosDelSistema;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -58,12 +59,12 @@ public class Usuario {
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "usuario")
 	private List<Pago> pagos;
 	
-	@ManyToMany()
+	@ManyToMany
 	@JoinTable(name="amigos",
-			   joinColumns = @JoinColumn(name = "usuarios_id"), 
-			   inverseJoinColumns = @JoinColumn(name = "usuarios_id")
+			   joinColumns = @JoinColumn(name = "usuarios1_id"), 
+			   inverseJoinColumns = @JoinColumn(name = "usuarios2_id")
 	)
-	private List<Usuario> amigos;
+	private List<Usuario> amigos = new ArrayList<Usuario>();
 	
 	public Usuario() {
 		

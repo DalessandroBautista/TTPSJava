@@ -32,7 +32,7 @@ public class Pago {
 	private Date fecha;
 	
 	@ManyToOne
-	@JoinColumn(name="group_id", nullable=false)
+	@JoinColumn(name="grupo_id", nullable=false)
 	private Grupo grupo;	
 	
 	@ManyToOne
